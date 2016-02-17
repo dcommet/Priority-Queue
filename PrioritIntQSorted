@@ -1,0 +1,106 @@
+/**
+ * Dustin Commet
+ * COSC 311 - Programming Assignment #1
+ * 2/15/16
+ */
+import java.util.*;
+public class PriorityIntQSorted{
+	//array that holds the data for the priority queue
+	private int[] pQueue;
+	
+	//constructor for the class
+	public PriorityIntQSorted(){
+		pQueue = new int[10];
+		for(int i = 0; i < pQueue.length; i++){
+			pQueue[i] = -1;
+		}
+	}
+	      
+	//method to find the minimum integer in the array
+	public int findMin(){
+		for(int i = pQueue.length - 1; i >= 0; i--){
+			if(pQueue[i] >= 0){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	//method to delete the minimum integer in the array and return the deleted integer
+	public int deleteMin(){
+		int mini = findMin();
+		int old = pQueue[mini];
+		pQueue[mini] = -1;
+		return old;
+	}
+	
+	//method that checks if the array is empty
+	public boolean isEmpty(){
+		if(pQueue[0] >= 0)
+			return false;
+		else
+			return true;
+	}
+	
+	//method to add an integer to the array -- utilizes insert(int input)
+	public void add(int input) {
+		insert(input);
+	}
+
+	//method to insert an integer into the array in the correct placement of priority
+	public void insert(int input) {
+		if(pQueue[pQueue.length - 1] > -1){
+			int copy[] = new int[pQueue.length * 2];
+			System.arraycopy(pQueue, 0, copy, 0, pQueue.length);
+			for(int i = pQueue.length; i < copy.length; i++)
+				copy[i] = -1;
+			pQueue = copy;
+		}
+		for(int i= pQueue.length - 1; i >= 0; i--){
+			if(pQueue[i]< input && i == pQueue.length-1){
+				continue;
+			}
+			else if (i ==0){
+				pQueue[i+1] = pQueue[i];
+				pQueue[i] = input;
+				break;
+			}
+			else if (pQueue[i] < input && pQueue[i-1] > input){
+				pQueue[i+1] = pQueue[i];
+				pQueue[i] = input;
+				break;
+			}
+			else if(input > pQueue[i]){
+				pQueue[i+1] = pQueue[i];
+				continue;
+			}
+		}
+	}
+	
+	//method to remove from the array -- utilizes deleteMin()
+	public int remove() {
+		return deleteMin();
+	}
+	
+	
+	//method to convert the array into a string for output
+	public String toString(){
+		String str = "";
+		for(int i = 0; i < pQueue.length; i++){
+			if (pQueue[i] != -1)
+				str = str + pQueue[i] + "\t";
+		}
+		return str;
+	}
+	
+	/**
+	 * output:
+5	4	3	
+minPQ:
+3
+4
+5
+	 */
+	
+	
+}
