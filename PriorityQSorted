@@ -1,0 +1,122 @@
+/**
+ * Dustin Commet
+ * COSC 311 - Programming Assignment #1
+ * 2/15/16
+ */
+import java.util.*;
+public class PriorityQSorted<T> {
+	
+	//array that holds the data for the priority queue
+	int DEFAULT_CAPACITY = 10; 
+	private T[] pQueue;
+	
+	//constructor for the class
+	public PriorityQSorted(){
+		pQueue = (T[]) new Object[DEFAULT_CAPACITY];
+		for(int i = 0; i < pQueue.length; i++){
+			pQueue[i] = null;
+		}
+	}
+	
+	//method to find the minimum value in the array
+	public int findMin(){
+		int min = 0;
+		for(int i = pQueue.length - 1; i >= 0; i--){
+			if(pQueue[i] == null){
+				continue;
+			}
+			else if(((Comparable)pQueue[i]).compareTo((Comparable)(pQueue[min])) < 0){
+				min = i;
+			}
+		}
+		return min;
+	}
+	
+	//method to delete the minimum value in the array and return the deleted value
+	public <T> T deleteMin(){
+		int mini = findMin();
+		T old = (T) pQueue[mini];
+		pQueue[mini] = null;
+		return old;
+	}
+	
+	//method that checks if the array is empty
+	public <T> boolean isEmpty(){
+		if(pQueue[0] == null)
+			return true;
+		else
+			return false;
+	}
+	
+	//method to add a value to the array -- utilizes insert(T input)
+	public void add(T input) {
+		insert(input);
+	}
+	
+	//method to insert a value into the array in the correct placement of priority
+	public void insert(T input) {
+		if(pQueue[pQueue.length - 1] != null){
+			T copy[] =(T[]) new Object[pQueue.length * 2];
+			System.arraycopy(pQueue, 0, copy, 0, pQueue.length);
+			for(int i = pQueue.length; i < copy.length; i++)
+				copy[i] = null;
+			pQueue = copy;
+		}
+		for(int i= pQueue.length - 1; i >= 0; i--){
+			if(pQueue[i] == null && i == 0){
+				pQueue[0] = input;
+				break;
+			}
+			else if(pQueue[i] == null){
+				continue;
+			}
+			else if(((Comparable)pQueue[i]).compareTo(input) == -1 && i == pQueue.length-1){
+				continue;
+			}
+			else if(((Comparable)pQueue[i]).compareTo(input) == -1 && (i-1) == 0){
+				pQueue[i+1] = pQueue[i];
+				pQueue[i] = pQueue[i-1];
+				pQueue[i-1] = input;
+				break;
+			}
+			else if (i == 0){
+				pQueue[i+1] = input;
+				break;
+			}
+			else if (((Comparable)pQueue[i]).compareTo(input) == -1 && ((Comparable)pQueue[i-1]).compareTo(input) >= 0){
+				pQueue[i+1] = pQueue[i];
+				pQueue[i] = input;
+				break;
+			}
+			else if(((Comparable)pQueue[i]).compareTo(input) == 1){
+				pQueue[i+1] = pQueue[i];
+				continue;
+			}
+		}
+	}
+	
+	//method to remove from the array -- utilizes deleteMin()
+	public T remove() {
+		return deleteMin();
+	}
+	
+	//method to convert the array into a string for output
+	public String toString(){
+		String str = "";
+		for(int i = 0; i < pQueue.length; i++){
+			if (pQueue[i] != null)
+				str = str + pQueue[i] + "\t";
+		}
+		return str;
+	}
+	
+	/**
+	 * output:
+5	4	3	
+minPQ_generic:
+3
+4
+5
+	 */
+}
+
